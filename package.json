@@ -1,0 +1,34 @@
+{
+  "name": "rubberband-travel",
+  "version": "1.0.0",
+  "description": "A novel 3D locomotion technique for high-intensity simulations",
+  "main": "index.ts",
+  "dependencies": {
+    "babylonjs": "^4.1.0",
+    "babylonjs-gui": "^4.1.0"
+  },
+  "devDependencies": {
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "scripts": {
+    "start": "npx webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teddychen1251/rubberband-travel.git"
+  },
+  "keywords": [
+    "3DUI",
+    "locomotion"
+  ],
+  "author": "Chris Obando and Teddy Chen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teddychen1251/rubberband-travel/issues"
+  },
+  "homepage": "https://github.com/teddychen1251/rubberband-travel#readme"
+}
