@@ -1,16 +1,27 @@
 // MeshBuilder: Has required side effects to populate the Create methods on the mesh class. Without this, the bundle would be smaller but the createXXX methods from mesh would not be accessible.
-import { Engine, Scene, MeshBuilder } from "babylonjs";
+import { Engine, Scene, MeshBuilder, Texture, Color3, WebXRMotionControllerManager } from "babylonjs";
+
+import { RubberbandControls } from "./rubberbandcontrols";
 
 var canvas = document.getElementById("renderCanvas") as HTMLCanvasElement; // Get the canvas element 
 var engine = new Engine(canvas, true); // Generate the BABYLON 3D engine
+WebXRMotionControllerManager.PrioritizeOnlineRepository = false;
 
 class RubberbandWorld { 
     public static async CreateScene(engine: Engine, canvas: HTMLCanvasElement) {
         // Create the scene space
-        var scene = new Scene(engine);
+        let scene = new Scene(engine);
         scene.createDefaultCameraOrLight(true, true, true);
+        let envHelper = scene.createDefaultEnvironment({
+            skyboxSize: 75,
+            skyboxColor: Color3.Teal(),
+            groundSize: 50,
+            groundTexture: new Texture("textures/grass.jpg", scene)
+        });
 
         const xr = await scene.createDefaultXRExperienceAsync({});
+        xr.pointerSelection.detach();
+        const rubberbandControls = new RubberbandControls(scene, xr);
 
         return scene;
     }
