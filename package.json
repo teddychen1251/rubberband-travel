@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "A novel 3D locomotion technique for high-intensity simulations",
   "main": "index.ts",
-  "dependencies": {
-    "babylonjs": "^4.1.0",
-    "babylonjs-gui": "^4.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@babylonjs/core": "^4.1.0",
+    "@babylonjs/loaders": "^4.1.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.4",
     "webpack": "^4.41.5",
