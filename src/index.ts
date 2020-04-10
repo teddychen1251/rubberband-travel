@@ -4,12 +4,11 @@ import { Scene } from "@babylonjs/core/scene";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
-import { Color4 } from "@babylonjs/core/Maths/math.color";
 
 import "@babylonjs/core/Helpers/sceneHelpers";
 import "@babylonjs/loaders/glTF";
-// import { Avatar } from "./avatar"
-// import { RubberbandControls } from "./rubberbandcontrols";
+import { Avatar } from "./avatar"
+import { RubberbandControls } from "./rubberbandcontrols";
 
 var canvas = document.getElementById("renderCanvas") as HTMLCanvasElement; // Get the canvas element 
 var engine = new Engine(canvas, true); // Generate the BABYLON 3D engine
@@ -18,8 +17,9 @@ class RubberbandWorld {
     public static async CreateScene(engine: Engine, canvas: HTMLCanvasElement) {
         // Create the scene space
         let scene = new Scene(engine);
-        scene.clearColor = new Color4(0, .5, .5, 1);
         scene.createDefaultCameraOrLight(true, true, true);
+        scene.createDefaultSkybox(new Texture("textures/teal-texture.jpg", scene));
+
         let ground = MeshBuilder.CreateBox("ground", { width: 50, height: 1, depth: 50 }, scene);
         ground.position.y -= .5;
         let groundMat = new StandardMaterial("groundMat", scene);
@@ -34,8 +34,8 @@ class RubberbandWorld {
 
         const xr = await scene.createDefaultXRExperienceAsync({});
         xr.pointerSelection.detach();
-        // const avatar = new Avatar(scene, xr.baseExperience.camera);
-        // const rubberbandControls = new RubberbandControls(scene, xr, avatar);
+        const avatar = new Avatar(scene, xr.baseExperience.camera);
+        const rubberbandControls = new RubberbandControls(scene, xr, avatar);
 
         return scene;
     }
@@ -48,14 +48,13 @@ var createScene = async function() {
         engine.getRenderingCanvas() as HTMLCanvasElement); 
 }
 
-var scene = createScene(); //Call the createScene function
-
-// Register a render loop to repeatedly render the scene
-engine.runRenderLoop(async function () {
-    (await scene).render();
-});
-
-// Watch for browser/canvas resize events
-window.addEventListener("resize", function () { 
-    engine.resize();
+createScene().then(scene => {
+    engine.runRenderLoop(function () {
+        scene.render();
+    });
+    
+    // Watch for browser/canvas resize events
+    window.addEventListener("resize", function () { 
+        engine.resize();
+    });
 });
