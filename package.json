@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "A novel 3D locomotion technique for high-intensity simulations",
   "main": "index.ts",
-  "dependencies": {},
+  "dependencies": {
+    "@types/cannon": "^0.1.4",
+    "cannon": "^0.6.2"
+  },
   "devDependencies": {
     "@babylonjs/core": "^4.1.0",
     "@babylonjs/loaders": "^4.1.0",
