@@ -87,7 +87,7 @@ export class RubberbandControls {
         let force = this.rightController!.rootMesh!.absolutePosition
             .subtract(this.leftController!.rootMesh!.absolutePosition);
         if (!leftHandIsTail) force = force.scale(-1);
-        force = force.scale(1000);
+        force = this.avatar.nearGround() ? force.scale(5000) : force.scale(500);
         this.avatar.body.physicsImpostor!.applyImpulse(force, this.avatar.body.absolutePosition);
     }
 }

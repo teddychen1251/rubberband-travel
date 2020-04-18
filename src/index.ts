@@ -32,10 +32,11 @@ class RubberbandWorld {
         groundMat.diffuseTexture = new Texture("textures/grass.jpg", scene);
         ground.material = groundMat;
 
-        scene.enablePhysics(new Vector3(0, -9.81, 0), new CannonJSPlugin(undefined, undefined, Cannon));
+        scene.enablePhysics(new Vector3(0, -7, 0), new CannonJSPlugin(undefined, undefined, Cannon));
         ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, {
             mass: 0,
-            restitution: 0.1
+            restitution: 0.1,
+            friction: 1
         }, scene);
 
         const xr = await scene.createDefaultXRExperienceAsync({});
