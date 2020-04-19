@@ -15,11 +15,14 @@ import * as Cannon from "cannon";
 
 import { Avatar } from "./avatar"
 import { RubberbandControls } from "./rubberbandcontrols";
+import { GUI } from "./gui";
 
 var canvas = document.getElementById("renderCanvas") as HTMLCanvasElement; // Get the canvas element 
 var engine = new Engine(canvas, true); // Generate the BABYLON 3D engine
 
 class RubberbandWorld { 
+    static GRAVITY: Vector3 = new Vector3(0, -7, 0);
+
     public static async CreateScene(engine: Engine, canvas: HTMLCanvasElement) {
         // Create the scene space
         let scene = new Scene(engine);
@@ -32,7 +35,7 @@ class RubberbandWorld {
         groundMat.diffuseTexture = new Texture("textures/grass.jpg", scene);
         ground.material = groundMat;
 
-        scene.enablePhysics(new Vector3(0, -7, 0), new CannonJSPlugin(undefined, undefined, Cannon));
+        scene.enablePhysics(RubberbandWorld.GRAVITY, new CannonJSPlugin(undefined, undefined, Cannon));
         ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, {
             mass: 0,
             restitution: 0.1,
@@ -40,7 +43,7 @@ class RubberbandWorld {
         }, scene);
 
         const xr = await scene.createDefaultXRExperienceAsync({});
-        xr.pointerSelection.detach();
+        const gui = new GUI(scene, xr);
         const avatar = new Avatar(scene, xr.baseExperience.camera);
         const rubberbandControls = new RubberbandControls(scene, xr, avatar);
 
