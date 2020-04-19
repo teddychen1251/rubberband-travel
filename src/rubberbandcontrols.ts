@@ -1,3 +1,4 @@
+import { WebXRState } from "@babylonjs/core/XR/webXRTypes";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Scene } from "@babylonjs/core/scene";
 import { Texture } from "@babylonjs/core";
@@ -9,7 +10,7 @@ import { Avatar } from "./avatar";
 import { Vector3, Color3 } from "@babylonjs/core/Maths/math";
 
 export class RubberbandControls {
-  private static _RUBBER_FORCE_MULTIPLIER = 5000;
+  private static _RUBBER_FORCE_MULTIPLIER = 2000;
 
   static get RUBBER_FORCE_MULTIPLIER(): number {
     return RubberbandControls._RUBBER_FORCE_MULTIPLIER;
@@ -57,6 +58,13 @@ export class RubberbandControls {
     skinTexture.wrapU = 1;
     skinTexture.wrapV = 1;
     skinMat.diffuseTexture = skinTexture;
+
+    const sword = MeshBuilder.CreateBox(
+      "sword",
+      { height: 0.6, width: 0.03, depth: 0.01 },
+      scene
+    );
+    sword.position = new Vector3(1, -1, 0);
 
     const leftHand = MeshBuilder.CreateSphere(
       "left",
@@ -148,6 +156,10 @@ export class RubberbandControls {
           instance: this.currentRubberband,
         });
       }
+
+      sword.position = this.xr.baseExperience.camera.globalPosition.subtract(
+        new Vector3(-0.25, 0.75, 0)
+      );
     });
   }
 

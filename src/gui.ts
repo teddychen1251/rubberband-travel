@@ -40,10 +40,10 @@ export class GUI {
                 this.panel.position = this.xr.baseExperience.camera.getFrontPosition(
                   0.5
                 );
-                xr.pointerSelection.displayLaserPointer = !xr.pointerSelection
-                  .displayLaserPointer;
+                xr.pointerSelection.displayLaserPointer = this.panel.isVisible;
                 xr.pointerSelection.displaySelectionMesh = !xr.pointerSelection
                   .displaySelectionMesh;
+
                 this.panel.rotation.y =
                   -this.xr.baseExperience.camera.rotationQuaternion.y * Math.PI;
                 this.panel.lookAt(
