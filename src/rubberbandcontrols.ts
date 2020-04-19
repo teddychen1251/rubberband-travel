@@ -10,6 +10,7 @@ import { Vector3, Color3 } from "@babylonjs/core/Maths/math";
 
 export class RubberbandControls {
   private static _RUBBER_FORCE_MULTIPLIER = 5000;
+
   static get RUBBER_FORCE_MULTIPLIER(): number {
     return RubberbandControls._RUBBER_FORCE_MULTIPLIER;
   }
@@ -32,12 +33,30 @@ export class RubberbandControls {
     this.avatar = avatar;
 
     var skinMat = new StandardMaterial("skinMat", scene);
-    skinMat.ambientTexture = new Texture("textures/skin.jpg", scene);
-    skinMat.specularTexture = new Texture("textures/skin.jpg", scene);
-    skinMat.bumpTexture = new Texture("textures/skin.jpg", scene);
-    skinMat.diffuseColor = new Color3(0.8, 0.8, 0.8);
-    skinMat.specularColor = new Color3(0.5, 0.5, 0.5);
-    skinMat.specularPower = 32;
+
+    skinMat.ambientColor = new Color3(0.302, 0.302, 0.302);
+    skinMat.diffuseColor = new Color3(1, 1, 1);
+    skinMat.emissiveColor = new Color3(0, 0, 0);
+    skinMat.specularColor = new Color3(0, 0, 0);
+    skinMat.specularPower = 256;
+    skinMat.alpha = 1;
+    skinMat.backFaceCulling = true;
+    skinMat.checkReadyOnlyOnce = true;
+    var skinTexture = new Texture("textures/skin.jpg", scene);
+    skinTexture.hasAlpha = true;
+    skinTexture.level = 1;
+    skinTexture.coordinatesIndex = 0;
+    skinTexture.coordinatesMode = 0;
+    skinTexture.uOffset = 0;
+    skinTexture.vOffset = 0;
+    skinTexture.uScale = 1;
+    skinTexture.vScale = 1;
+    skinTexture.uAng = 0;
+    skinTexture.vAng = 0;
+    skinTexture.wAng = 0;
+    skinTexture.wrapU = 1;
+    skinTexture.wrapV = 1;
+    skinMat.diffuseTexture = skinTexture;
 
     const leftHand = MeshBuilder.CreateSphere(
       "left",

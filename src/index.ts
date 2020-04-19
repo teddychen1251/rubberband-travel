@@ -22,7 +22,7 @@ var canvas = document.getElementById("renderCanvas") as HTMLCanvasElement; // Ge
 var engine = new Engine(canvas, true); // Generate the BABYLON 3D engine
 
 class RubberbandWorld {
-  static GRAVITY: Vector3 = new Vector3(0, -7, 0);
+  static GRAVITY: Vector3 = new Vector3(0, -10, 0);
 
   public static async CreateScene(engine: Engine, canvas: HTMLCanvasElement) {
     // Create the scene space
@@ -43,16 +43,13 @@ class RubberbandWorld {
 
     // Ground
     const groundMaterial = new StandardMaterial("ground-material", scene);
-    groundMaterial.diffuseTexture = new Texture("textures/grass.png", scene);
-    groundMaterial.bumpTexture = new Texture("textures/grassn.png", scene);
     groundMaterial.diffuseColor = new Color3(0.8, 0.8, 0.8);
-    groundMaterial.specularColor = new Color3(0.5, 0.5, 0.5);
-    groundMaterial.specularPower = 32;
-
-    const xr = await scene.createDefaultXRExperienceAsync({});
-    const gui = new GUI(scene, xr);
-    const avatar = new Avatar(scene, xr.baseExperience.camera);
-    const rubberbandControls = new RubberbandControls(scene, xr, avatar);
+    groundMaterial.specularColor = new Color3(0, 0, 0);
+    groundMaterial.specularPower = 256;
+    var groundTexture = new Texture("textures/grass.png", scene);
+    groundTexture.uScale = 1000;
+    groundTexture.vScale = 1000;
+    groundMaterial.diffuseTexture = groundTexture;
 
     const ground = MeshBuilder.CreateBox(
       "ground",
@@ -63,7 +60,7 @@ class RubberbandWorld {
     ground.position = new Vector3(0, -0.5, 0);
 
     scene.enablePhysics(
-      new Vector3(0, -7, 0),
+      RubberbandWorld.GRAVITY,
       new CannonJSPlugin(undefined, undefined, Cannon)
     );
     ground.physicsImpostor = new PhysicsImpostor(
@@ -76,6 +73,11 @@ class RubberbandWorld {
       },
       scene
     );
+
+    const xr = await scene.createDefaultXRExperienceAsync({});
+    const gui = new GUI(scene, xr);
+    const avatar = new Avatar(scene, xr.baseExperience.camera);
+    const rubberbandControls = new RubberbandControls(scene, xr, avatar);
 
     return scene;
   }
