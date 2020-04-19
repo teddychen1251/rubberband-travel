@@ -7,7 +7,7 @@ import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import { Vector3 } from "@babylonjs/core/Maths/math";
 
 export class Avatar {
-  private static HEIGHT: number = 1.7;
+  static readonly HEIGHT: number = 1.7;
   private scene: Scene;
   fpView: FreeCamera;
   body: AbstractMesh;

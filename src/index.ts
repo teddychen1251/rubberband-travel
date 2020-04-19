@@ -16,26 +16,18 @@ import * as Cannon from "cannon";
 import { Avatar } from "./avatar";
 import { RubberbandControls } from "./rubberbandcontrols";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
+import { GUI } from "./gui";
 
 var canvas = document.getElementById("renderCanvas") as HTMLCanvasElement; // Get the canvas element
 var engine = new Engine(canvas, true); // Generate the BABYLON 3D engine
 
 class RubberbandWorld {
+  static GRAVITY: Vector3 = new Vector3(0, -7, 0);
+
   public static async CreateScene(engine: Engine, canvas: HTMLCanvasElement) {
     // Create the scene space
     let scene = new Scene(engine);
     scene.createDefaultCameraOrLight(true, true, true);
-    // scene.createDefaultSkybox(new Texture("textures/skybox", scene));
-
-    // let ground = MeshBuilder.CreateBox(
-    //   "ground",
-    //   { width: 500, height: 1, depth: 500 },
-    //   scene
-    // );
-    // ground.position.y -= 0.5;
-    // let groundMat = new StandardMaterial("groundMat", scene);
-    // groundMat.diffuseTexture = new Texture("textures/grass.jpg", scene);
-    // ground.material = groundMat;
 
     const skybox = MeshBuilder.CreateBox("skyBox", { size: 4000.0 }, scene);
     const skyboxMaterial = new StandardMaterial("skyBox", scene);
@@ -56,6 +48,11 @@ class RubberbandWorld {
     groundMaterial.diffuseColor = new Color3(0.8, 0.8, 0.8);
     groundMaterial.specularColor = new Color3(0.5, 0.5, 0.5);
     groundMaterial.specularPower = 32;
+
+    const xr = await scene.createDefaultXRExperienceAsync({});
+    const gui = new GUI(scene, xr);
+    const avatar = new Avatar(scene, xr.baseExperience.camera);
+    const rubberbandControls = new RubberbandControls(scene, xr, avatar);
 
     const ground = MeshBuilder.CreateBox(
       "ground",
@@ -79,11 +76,6 @@ class RubberbandWorld {
       },
       scene
     );
-
-    const xr = await scene.createDefaultXRExperienceAsync({});
-    xr.pointerSelection.detach();
-    const avatar = new Avatar(scene, xr.baseExperience.camera);
-    const rubberbandControls = new RubberbandControls(scene, xr, avatar);
 
     return scene;
   }

@@ -9,6 +9,14 @@ import { Avatar } from "./avatar";
 import { Vector3, Color3 } from "@babylonjs/core/Maths/math";
 
 export class RubberbandControls {
+  private static _RUBBER_FORCE_MULTIPLIER = 5000;
+  static get RUBBER_FORCE_MULTIPLIER(): number {
+    return RubberbandControls._RUBBER_FORCE_MULTIPLIER;
+  }
+  static set RUBBER_FORCE_MULTIPLIER(value: number) {
+    RubberbandControls._RUBBER_FORCE_MULTIPLIER = value;
+  }
+
   private scene: Scene;
   private xr: WebXRDefaultExperience;
   private avatar: Avatar;
@@ -162,12 +170,14 @@ export class RubberbandControls {
     this.currentRubberband.dispose();
     this.applyForce(leftReleased);
   }
+
   private applyForce(leftHandIsTail: boolean) {
     let force = this.rightController!.rootMesh!.absolutePosition.subtract(
       this.leftController!.rootMesh!.absolutePosition
     );
     if (!leftHandIsTail) force = force.scale(-1);
-    force = this.avatar.nearGround() ? force.scale(5000) : force.scale(500);
+    force = force.scale(RubberbandControls.RUBBER_FORCE_MULTIPLIER);
+    if (!this.avatar.nearGround()) force = force.scale(0.1);
     this.avatar.body.physicsImpostor!.applyImpulse(
       force,
       this.avatar.body.absolutePosition
