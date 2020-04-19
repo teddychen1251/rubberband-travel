@@ -1,7 +1,7 @@
 import { WebXRState } from "@babylonjs/core/XR/webXRTypes";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Scene } from "@babylonjs/core/scene";
-import { Texture } from "@babylonjs/core";
+import { Texture, Mesh } from "@babylonjs/core";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { LinesMesh } from "@babylonjs/core/Meshes/linesMesh";
 import { WebXRDefaultExperience } from "@babylonjs/core/XR/webXRDefaultExperience";
@@ -24,6 +24,9 @@ export class RubberbandControls {
   private avatar: Avatar;
   private rightController?: WebXRAbstractMotionController;
   private leftController?: WebXRAbstractMotionController;
+  private leftHand: Mesh;
+  private rightHand: Mesh;
+  private equipped: boolean = false;
   private bothWerePressed: boolean = false;
   private currentRubberband: LinesMesh = new LinesMesh("");
   private rubberbandInitiated: boolean = false;
@@ -64,24 +67,20 @@ export class RubberbandControls {
       { height: 0.6, width: 0.03, depth: 0.01 },
       scene
     );
-    sword.position = new Vector3(1, -1, 0);
+    // sword.position = new Vector3(0, 0, 0);
 
-    const leftHand = MeshBuilder.CreateSphere(
-      "left",
-      { diameter: 0.12 },
-      scene
-    );
+    this.leftHand = MeshBuilder.CreateSphere("left", { diameter: 0.12 }, scene);
     const leftThumb = MeshBuilder.CreateSphere(
       "leftThumb",
       { diameter: 0.05 },
       scene
     );
     leftThumb.position = new Vector3(0.05, 0, 0);
-    leftHand.addChild(leftThumb);
-    leftHand.material = skinMat;
+    this.leftHand.addChild(leftThumb);
+    this.leftHand.material = skinMat;
     leftThumb.material = skinMat;
 
-    const rightHand = MeshBuilder.CreateSphere(
+    this.rightHand = MeshBuilder.CreateSphere(
       "right",
       { diameter: 0.12 },
       scene
@@ -92,13 +91,13 @@ export class RubberbandControls {
       scene
     );
     rightThumb.position = new Vector3(-0.05, 0, 0);
-    rightHand.addChild(rightThumb);
-    rightHand.material = skinMat;
+    this.rightHand.addChild(rightThumb);
+    this.rightHand.material = skinMat;
     rightThumb.material = skinMat;
 
-    leftHand.isVisible = false;
+    this.leftHand.isVisible = false;
     leftThumb.isVisible = false;
-    rightHand.isVisible = false;
+    this.rightHand.isVisible = false;
     rightThumb.isVisible = false;
 
     this.xr.input.onControllerAddedObservable.add((inputSource) => {
@@ -108,8 +107,8 @@ export class RubberbandControls {
             this.rightController = rightController;
 
             this.rightController.rootMesh?.dispose();
-            this.rightController.rootMesh?.addChild(rightHand);
-            rightHand.isVisible = true;
+            this.rightController.rootMesh?.addChild(this.rightHand);
+            this.rightHand.isVisible = true;
             rightThumb.isVisible = true;
 
             this.rightController
@@ -122,14 +121,36 @@ export class RubberbandControls {
                   this.handleSqueezeChange(false);
                 }
               });
+
+            this.rightController
+              .getComponentOfType("trigger")!
+              .onButtonStateChangedObservable.add(() => {
+                if (
+                  this.rightController === null ||
+                  this.rightController?.rootMesh === null
+                )
+                  return;
+
+                if (
+                  this.rightController &&
+                  this.rightController.getComponentOfType("trigger")?.pressed
+                ) {
+                  sword.position = this.rightController.rootMesh.position;
+                  this.rightHand.addChild(sword);
+                  this.equipped = true;
+                } else {
+                  this.equipped = false;
+                  this.rightController?.rootMesh?.removeChild(sword);
+                }
+              });
           });
         } else if (controller.handness === "left") {
           controller.onModelLoadedObservable.add((leftController) => {
             this.leftController = leftController;
 
             this.leftController.rootMesh?.dispose();
-            this.leftController.rootMesh?.addChild(leftHand);
-            leftHand.isVisible = true;
+            this.leftController.rootMesh?.addChild(this.leftHand);
+            this.leftHand.isVisible = true;
             leftThumb.isVisible = true;
 
             this.leftController
@@ -157,9 +178,11 @@ export class RubberbandControls {
         });
       }
 
-      sword.position = this.xr.baseExperience.camera.globalPosition.subtract(
-        new Vector3(-0.25, 0.75, 0)
-      );
+      if (!this.equipped) {
+        sword.position = this.xr.baseExperience.camera.globalPosition.subtract(
+          new Vector3(0.25, 0.75, 0)
+        );
+      }
     });
   }
 
