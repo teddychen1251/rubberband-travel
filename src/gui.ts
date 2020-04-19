@@ -66,7 +66,7 @@ export class GUI {
         stack.addControl(gravityHeader);
         stack.addControl(gravitySlider);
 
-        let rubberForceHeader = new TextBlock("rubber force header", `Rubber band force multiplier: ${RubberbandControls.RUBBER_FORCE_MULTIPLIER}`);
+        let rubberForceHeader = new TextBlock("rubber force header", `Rubber band force multiplier: ${RubberbandControls.RUBBER_FORCE_MULTIPLIER / 1000}`);
         rubberForceHeader.height = "20px";
         let rubberForceSlider = new Slider("rubber force slider");
         rubberForceSlider.minimum = .5;
@@ -75,7 +75,7 @@ export class GUI {
         rubberForceSlider.height = "30px";
         rubberForceSlider.onValueChangedObservable.add(value => {
             RubberbandControls.RUBBER_FORCE_MULTIPLIER = value * 1000;
-            rubberForceHeader.text = `Rubber band force multiplier: ${RubberbandControls.RUBBER_FORCE_MULTIPLIER}`;
+            rubberForceHeader.text = `Rubber band force multiplier: ${RubberbandControls.RUBBER_FORCE_MULTIPLIER / 1000}`;
         });
         stack.addControl(rubberForceHeader);
         stack.addControl(rubberForceSlider);
