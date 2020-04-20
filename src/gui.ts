@@ -40,7 +40,8 @@ export class GUI {
                 this.panel.position = this.xr.baseExperience.camera.getFrontPosition(
                   0.5
                 );
-                xr.pointerSelection.displayLaserPointer = this.panel.isVisible;
+                xr.pointerSelection.displayLaserPointer = !xr.pointerSelection
+                  .displayLaserPointer;
                 xr.pointerSelection.displaySelectionMesh = !xr.pointerSelection
                   .displaySelectionMesh;
 
@@ -69,24 +70,24 @@ export class GUI {
 
     let stack = new StackPanel("UI stack");
 
-    private buildGUI() {
-        let UI = AdvancedDynamicTexture.CreateForMesh(this.panel, 1024, 1024, false);
-        
-        let stack = new StackPanel("UI stack");
-        
-        let gravityHeader = new TextBlock("gravity header", `Gravity: ${this.scene.getPhysicsEngine()!.gravity.y} m/s^2`);
-        gravityHeader.height = "20px";
-        let gravitySlider = new Slider("gravity slider");
-        gravitySlider.minimum = -20;
-        gravitySlider.maximum = -0.5;
-        gravitySlider.value = this.scene.getPhysicsEngine()!.gravity.y;
-        gravitySlider.height = "30px";
-        gravitySlider.onValueChangedObservable.add(value => {
-            this.scene.getPhysicsEngine()!.setGravity(new Vector3(0, value, 0));
-            gravityHeader.text = `Gravity: ${this.scene.getPhysicsEngine()!.gravity.y} m/s`;
-        });
-        stack.addControl(gravityHeader);
-        stack.addControl(gravitySlider);
+    let gravityHeader = new TextBlock(
+      "gravity header",
+      `Gravity: ${this.scene.getPhysicsEngine()!.gravity.y} m/s^2`
+    );
+    gravityHeader.height = "20px";
+    let gravitySlider = new Slider("gravity slider");
+    gravitySlider.minimum = -20;
+    gravitySlider.maximum = -0.5;
+    gravitySlider.value = this.scene.getPhysicsEngine()!.gravity.y;
+    gravitySlider.height = "30px";
+    gravitySlider.onValueChangedObservable.add((value) => {
+      this.scene.getPhysicsEngine()!.setGravity(new Vector3(0, value, 0));
+      gravityHeader.text = `Gravity: ${
+        this.scene.getPhysicsEngine()!.gravity.y
+      } m/s`;
+    });
+    stack.addControl(gravityHeader);
+    stack.addControl(gravitySlider);
 
     let rubberForceHeader = new TextBlock(
       "rubber force header",

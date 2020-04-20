@@ -60,12 +60,26 @@ class RubberbandWorld {
     ground.material = groundMaterial;
     ground.position = new Vector3(0, -0.5, 0);
 
-    const target = MeshBuilder.CreateBox(
-      "target",
-      { height: 10, width: 10, depth: 10 },
+    const platform1 = MeshBuilder.CreateBox(
+      "plat1",
+      { height: 3, width: 2.5, depth: 2.5 },
       scene
     );
-    target.position = new Vector3(0, 4.5, 30);
+    platform1.position = new Vector3(0, 1.5, 15);
+
+    const platform2 = MeshBuilder.CreateBox(
+      "plat2",
+      { height: 6, width: 2.5, depth: 2.5 },
+      scene
+    );
+    platform2.position = new Vector3(0, 3, 25);
+
+    const platform3 = MeshBuilder.CreateBox(
+      "plat3",
+      { height: 10, width: 2.5, depth: 2.5 },
+      scene
+    );
+    platform3.position = new Vector3(0, 5, 40);
 
     scene.enablePhysics(RubberbandWorld.GRAVITY, new AmmoJSPlugin(true, Ammo));
 
@@ -80,21 +94,60 @@ class RubberbandWorld {
       scene
     );
 
-    target.physicsImpostor = new PhysicsImpostor(
-      target,
+    platform1.physicsImpostor = new PhysicsImpostor(
+      platform1,
       PhysicsImpostor.BoxImpostor,
       {
         mass: 0,
         restitution: 0.1,
-        friction: 1,
+        friction: 2,
+      },
+      scene
+    );
+
+    platform2.physicsImpostor = new PhysicsImpostor(
+      platform2,
+      PhysicsImpostor.BoxImpostor,
+      {
+        mass: 0,
+        restitution: 0.1,
+        friction: 2,
+      },
+      scene
+    );
+
+    platform3.physicsImpostor = new PhysicsImpostor(
+      platform3,
+      PhysicsImpostor.BoxImpostor,
+      {
+        mass: 0,
+        restitution: 0.1,
+        friction: 2,
       },
       scene
     );
 
     const xr = await scene.createDefaultXRExperienceAsync({});
+    // xr.teleportation;
     const gui = new GUI(scene, xr);
     const avatar = new Avatar(scene, xr.baseExperience.camera);
     const rubberbandControls = new RubberbandControls(scene, xr, avatar);
+
+    // SceneLoader.ImportMesh("", "models/", "map.glb", scene, function (
+    //   newMeshes
+    // ) {
+    //   newMeshes[0].position = new Vector3(0, 10, 0);
+    //   newMeshes[0].physicsImpostor = new PhysicsImpostor(
+    //     newMeshes[0],
+    //     PhysicsImpostor.MeshImpostor,
+    //     {
+    //       mass: 0,
+    //       restitution: 0.1,
+    //       friction: 1,
+    //     },
+    //     scene
+    //   );
+    // });
 
     return scene;
   }

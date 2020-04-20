@@ -9,7 +9,7 @@ import { Avatar } from "./avatar";
 import { Vector3, Color3 } from "@babylonjs/core/Maths/math";
 
 export class RubberbandControls {
-  private static _RUBBER_FORCE_MULTIPLIER = 2000;
+  private static _RUBBER_FORCE_MULTIPLIER = 1000;
 
   static get RUBBER_FORCE_MULTIPLIER(): number {
     return RubberbandControls._RUBBER_FORCE_MULTIPLIER;
@@ -229,7 +229,8 @@ export class RubberbandControls {
     );
     if (!leftHandIsTail) force = force.scale(-1);
     force = force.scale(RubberbandControls.RUBBER_FORCE_MULTIPLIER);
-    if (!this.avatar.nearGround()) force = force.scale(0.1);
+    if (!this.avatar.nearGround() && !this.avatar.onPlatform())
+      force = force.scale(0.1);
     this.avatar.body.physicsImpostor!.applyImpulse(
       force,
       this.avatar.body.absolutePosition

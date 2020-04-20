@@ -47,4 +47,23 @@ export class Avatar {
   nearGround(): boolean {
     return this.body.position.y - 0.025 <= 0.02;
   }
+
+  onPlatform(): boolean {
+    return (
+      this.body.position.x > -1.25 &&
+      this.body.position.x < 1.25 &&
+      ((this.body.position.y > 3 &&
+        this.body.position.y < 5 &&
+        this.body.position.z > 13.75 &&
+        this.body.position.z < 16.25) ||
+        (this.body.position.y > 6 &&
+          this.body.position.y < 8 &&
+          this.body.position.z > 23.75 &&
+          this.body.position.z < 26.25) ||
+        (this.body.position.y > 10 &&
+          this.body.position.y < 12 &&
+          this.body.position.z > 38.75 &&
+          this.body.position.z < 41.25))
+    );
+  }
 }
