@@ -60,12 +60,23 @@ class RubberbandWorld {
     ground.material = groundMaterial;
     ground.position = new Vector3(0, -0.5, 0);
 
+    // Platforms
+    const platMaterial = new StandardMaterial("ground-material", scene);
+    platMaterial.diffuseColor = new Color3(0.8, 0.8, 0.8);
+    platMaterial.specularColor = new Color3(0.1, 0.1, 0.1);
+    platMaterial.specularPower = 256;
+    var platTexture = new Texture("textures/marble.jpg", scene);
+    // platTexture.uScale = 5;
+    // platTexture.vScale = 5;
+    platMaterial.diffuseTexture = platTexture;
+
     const platform1 = MeshBuilder.CreateBox(
       "plat1",
       { height: 3, width: 2.5, depth: 2.5 },
       scene
     );
     platform1.position = new Vector3(0, 1.5, 15);
+    platform1.material = platMaterial;
 
     const platform2 = MeshBuilder.CreateBox(
       "plat2",
@@ -73,6 +84,7 @@ class RubberbandWorld {
       scene
     );
     platform2.position = new Vector3(0, 3, 25);
+    platform2.material = platMaterial;
 
     const platform3 = MeshBuilder.CreateBox(
       "plat3",
@@ -80,6 +92,7 @@ class RubberbandWorld {
       scene
     );
     platform3.position = new Vector3(0, 5, 40);
+    platform3.material = platMaterial;
 
     scene.enablePhysics(RubberbandWorld.GRAVITY, new AmmoJSPlugin(true, Ammo));
 
