@@ -67,6 +67,14 @@ export class RubberbandControls {
       scene
     );
 
+    const sword2 = MeshBuilder.CreateBox(
+      "sword2",
+      { height: 0.6, width: 0.03, depth: 0.01 },
+      scene
+    );
+    sword2.rotate(new Vector3(1, 0, 0), Math.PI / 4);
+    sword2.translate(new Vector3(0, 0.3, 0), 1);
+
     this.leftHand = MeshBuilder.CreateSphere("left", { diameter: 0.12 }, scene);
     const leftThumb = MeshBuilder.CreateSphere(
       "leftThumb",
@@ -90,6 +98,7 @@ export class RubberbandControls {
     );
     rightThumb.position = new Vector3(-0.05, 0, 0);
     this.rightHand.addChild(rightThumb);
+    this.rightHand.addChild(sword2);
     this.rightHand.material = skinMat;
     rightThumb.material = skinMat;
 
@@ -97,6 +106,7 @@ export class RubberbandControls {
     leftThumb.isVisible = false;
     this.rightHand.isVisible = false;
     rightThumb.isVisible = false;
+    sword2.isVisible = false;
 
     this.xr.input.onControllerAddedObservable.add((inputSource) => {
       inputSource.onMotionControllerInitObservable.add((controller) => {
@@ -128,14 +138,12 @@ export class RubberbandControls {
                   this.rightController.getComponentOfType("trigger")?.pressed
                 ) {
                   this.equipped = true;
-                  this.rightHand.addChild(sword);
-
-                  if (this.rightController && this.rightController.rootMesh) {
-                    sword.rotationQuaternion = this.rightController.rootMesh?.absoluteRotationQuaternion;
-                  }
+                  sword.isVisible = false;
+                  sword2.isVisible = true;
                 } else {
                   this.equipped = false;
-                  this.rightHand.removeChild(sword);
+                  sword.isVisible = true;
+                  sword2.isVisible = false;
                 }
               });
           });
@@ -179,7 +187,6 @@ export class RubberbandControls {
         );
         sword.rotation = new Vector3(0, 0, 0);
       } else {
-        sword.position = new Vector3(0, 0.3, 0);
       }
     });
   }

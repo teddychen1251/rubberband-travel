@@ -66,8 +66,6 @@ class RubberbandWorld {
     platMaterial.specularColor = new Color3(0.1, 0.1, 0.1);
     platMaterial.specularPower = 256;
     var platTexture = new Texture("textures/marble.jpg", scene);
-    // platTexture.uScale = 5;
-    // platTexture.vScale = 5;
     platMaterial.diffuseTexture = platTexture;
 
     const platform1 = MeshBuilder.CreateBox(
