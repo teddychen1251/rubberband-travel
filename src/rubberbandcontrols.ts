@@ -1,6 +1,11 @@
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Scene } from "@babylonjs/core/scene";
-import { Texture, Mesh } from "@babylonjs/core";
+import {
+  Texture,
+  Mesh,
+  ActionManager,
+  ExecuteCodeAction,
+} from "@babylonjs/core";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { LinesMesh } from "@babylonjs/core/Meshes/linesMesh";
 import { WebXRDefaultExperience } from "@babylonjs/core/XR/webXRDefaultExperience";
@@ -35,8 +40,39 @@ export class RubberbandControls {
     this.xr = xr;
     this.avatar = avatar;
 
-    var skinMat = new StandardMaterial("skinMat", scene);
+    const dummy = MeshBuilder.CreateBox(
+      "dummy",
+      { height: 3, width: 0.25, depth: 0.25 },
+      scene
+    );
+    dummy.position = new Vector3(0, 1.5, 0);
 
+    const sword = MeshBuilder.CreateBox(
+      "sword",
+      { height: 0.6, width: 0.03, depth: 0.01 },
+      scene
+    );
+
+    const sword2 = MeshBuilder.CreateBox(
+      "sword2",
+      { height: 0.6, width: 0.03, depth: 0.01 },
+      scene
+    );
+    sword2.rotate(new Vector3(1, 0, 0), Math.PI / 4);
+    sword2.translate(new Vector3(0, 0.3, 0), 1);
+    sword2.actionManager = new ActionManager(scene);
+    sword2.actionManager.registerAction(
+      new ExecuteCodeAction(
+        { trigger: ActionManager.OnIntersectionEnterTrigger, parameter: dummy },
+        () => {
+          if (this.equipped) {
+            dummy.isVisible = false;
+          }
+        }
+      )
+    );
+
+    var skinMat = new StandardMaterial("skinMat", scene);
     skinMat.ambientColor = new Color3(0.302, 0.302, 0.302);
     skinMat.diffuseColor = new Color3(1, 1, 1);
     skinMat.emissiveColor = new Color3(0, 0, 0);
@@ -60,20 +96,6 @@ export class RubberbandControls {
     skinTexture.wrapU = 1;
     skinTexture.wrapV = 1;
     skinMat.diffuseTexture = skinTexture;
-
-    const sword = MeshBuilder.CreateBox(
-      "sword",
-      { height: 0.6, width: 0.03, depth: 0.01 },
-      scene
-    );
-
-    const sword2 = MeshBuilder.CreateBox(
-      "sword2",
-      { height: 0.6, width: 0.03, depth: 0.01 },
-      scene
-    );
-    sword2.rotate(new Vector3(1, 0, 0), Math.PI / 4);
-    sword2.translate(new Vector3(0, 0.3, 0), 1);
 
     this.leftHand = MeshBuilder.CreateSphere("left", { diameter: 0.12 }, scene);
     const leftThumb = MeshBuilder.CreateSphere(
@@ -170,6 +192,7 @@ export class RubberbandControls {
         }
       });
     });
+
     scene.registerBeforeRender(() => {
       if (this.rubberbandInitiated) {
         this.currentRubberband = MeshBuilder.CreateDashedLines("rubberband", {
