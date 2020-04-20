@@ -11,6 +11,9 @@ module.exports = {
     devServer: {
         compress: true,
         disableHostCheck: true
+    },
+    node: {
+        fs: 'empty'
     }
 }
 

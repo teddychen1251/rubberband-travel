@@ -5,13 +5,14 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Vector3, Color3 } from "@babylonjs/core/Maths/math";
-import { CannonJSPlugin } from "@babylonjs/core/Physics/Plugins/cannonJSPlugin";
+import { AmmoJSPlugin } from "@babylonjs/core/Physics/Plugins/ammoJSPlugin";
 import { PhysicsImpostor } from "@babylonjs/core/Physics/physicsImpostor";
 
 import "@babylonjs/core/Physics/physicsEngineComponent";
 import "@babylonjs/core/Helpers/sceneHelpers";
 import "@babylonjs/loaders/glTF";
-import * as Cannon from "cannon";
+// @ts-ignore
+import * as Ammo from "ammo.js";
 
 import { Avatar } from "./avatar";
 import { RubberbandControls } from "./rubberbandcontrols";
@@ -28,7 +29,6 @@ class RubberbandWorld {
     // Create the scene space
     let scene = new Scene(engine);
     scene.createDefaultCameraOrLight(true, true, true);
-    scene.collisionsEnabled = true;
 
     const skybox = MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
     const skyboxMaterial = new StandardMaterial("skyBox", scene);
@@ -67,10 +67,8 @@ class RubberbandWorld {
     );
     target.position = new Vector3(0, 4.5, 30);
 
-    scene.enablePhysics(
-      RubberbandWorld.GRAVITY,
-      new CannonJSPlugin(undefined, undefined, Cannon)
-    );
+    scene.enablePhysics(RubberbandWorld.GRAVITY, new AmmoJSPlugin(true, Ammo));
+
     ground.physicsImpostor = new PhysicsImpostor(
       ground,
       PhysicsImpostor.BoxImpostor,
