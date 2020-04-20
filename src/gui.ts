@@ -52,7 +52,7 @@ export class GUI {
         
         let stack = new StackPanel("UI stack");
         
-        let gravityHeader = new TextBlock("gravity header", `Gravity: ${this.scene.getPhysicsEngine()!.gravity.y} m/s`);
+        let gravityHeader = new TextBlock("gravity header", `Gravity: ${this.scene.getPhysicsEngine()!.gravity.y} m/s^2`);
         gravityHeader.height = "20px";
         let gravitySlider = new Slider("gravity slider");
         gravitySlider.minimum = -20;

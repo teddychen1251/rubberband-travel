@@ -4,8 +4,7 @@
   "description": "A novel 3D locomotion technique for high-intensity simulations",
   "main": "index.ts",
   "dependencies": {
-    "@types/cannon": "^0.1.4",
-    "cannon": "^0.6.2"
+    "ammo.js": "github:kripken/ammo.js#aab297a4164779c3a9d8dc8d9da26958de3cb778"
   },
   "devDependencies": {
     "@babylonjs/core": "^4.1.0",

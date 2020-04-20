@@ -5,13 +5,14 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Vector3 } from "@babylonjs/core/Maths/math";
-import { CannonJSPlugin } from "@babylonjs/core/Physics/Plugins/cannonJSPlugin";
+import { AmmoJSPlugin } from "@babylonjs/core/Physics/Plugins/ammoJSPlugin";
 import { PhysicsImpostor } from "@babylonjs/core/Physics/physicsImpostor";
 
 import "@babylonjs/core/Physics/physicsEngineComponent";
 import "@babylonjs/core/Helpers/sceneHelpers";
 import "@babylonjs/loaders/glTF";
-import * as Cannon from "cannon";
+// @ts-ignore
+import * as Ammo from "ammo.js";
 
 import { Avatar } from "./avatar"
 import { RubberbandControls } from "./rubberbandcontrols";
@@ -35,7 +36,7 @@ class RubberbandWorld {
         groundMat.diffuseTexture = new Texture("textures/grass.jpg", scene);
         ground.material = groundMat;
 
-        scene.enablePhysics(RubberbandWorld.GRAVITY, new CannonJSPlugin(undefined, undefined, Cannon));
+        scene.enablePhysics(RubberbandWorld.GRAVITY, new AmmoJSPlugin(true, Ammo));
         ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, {
             mass: 0,
             restitution: 0.1,
