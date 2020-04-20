@@ -40,12 +40,37 @@ export class RubberbandControls {
     this.xr = xr;
     this.avatar = avatar;
 
+    const dummyMaterial = new StandardMaterial("dummy-material", scene);
+    dummyMaterial.diffuseColor = new Color3(0.8, 0.8, 0.8);
+    dummyMaterial.specularColor = new Color3(0.1, 0.1, 0.1);
+    dummyMaterial.specularPower = 256;
+    var dummyTexture = new Texture("textures/dummy.jpg", scene);
+    dummyMaterial.diffuseTexture = dummyTexture;
+
     const dummy = MeshBuilder.CreateBox(
       "dummy",
-      { height: 3, width: 0.25, depth: 0.25 },
+      { height: 2, width: 0.5, depth: 0.5 },
       scene
     );
-    dummy.position = new Vector3(0, 1.5, 0);
+    dummy.position = new Vector3(0, 1, 8);
+
+    const dummy2 = MeshBuilder.CreateBox(
+      "dummy",
+      { height: 0.5, width: 0.5, depth: 0.5 },
+      scene
+    );
+    dummy2.position = new Vector3(0, 8.5, 32);
+
+    const dummy3 = MeshBuilder.CreateBox(
+      "dummy",
+      { height: 2, width: 0.5, depth: 0.5 },
+      scene
+    );
+    dummy3.position = new Vector3(0, 11, 40);
+
+    dummy.material = dummyMaterial;
+    dummy2.material = dummyMaterial;
+    dummy3.material = dummyMaterial;
 
     const sword = MeshBuilder.CreateBox(
       "sword",
@@ -67,6 +92,32 @@ export class RubberbandControls {
         () => {
           if (this.equipped) {
             dummy.isVisible = false;
+          }
+        }
+      )
+    );
+    sword2.actionManager.registerAction(
+      new ExecuteCodeAction(
+        {
+          trigger: ActionManager.OnIntersectionEnterTrigger,
+          parameter: dummy2,
+        },
+        () => {
+          if (this.equipped) {
+            dummy2.isVisible = false;
+          }
+        }
+      )
+    );
+    sword2.actionManager.registerAction(
+      new ExecuteCodeAction(
+        {
+          trigger: ActionManager.OnIntersectionEnterTrigger,
+          parameter: dummy3,
+        },
+        () => {
+          if (this.equipped) {
+            dummy3.isVisible = false;
           }
         }
       )

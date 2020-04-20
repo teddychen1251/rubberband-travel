@@ -61,7 +61,7 @@ class RubberbandWorld {
     ground.position = new Vector3(0, -0.5, 0);
 
     // Platforms
-    const platMaterial = new StandardMaterial("ground-material", scene);
+    const platMaterial = new StandardMaterial("platform-material", scene);
     platMaterial.diffuseColor = new Color3(0.8, 0.8, 0.8);
     platMaterial.specularColor = new Color3(0.1, 0.1, 0.1);
     platMaterial.specularPower = 256;
