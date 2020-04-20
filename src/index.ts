@@ -22,14 +22,15 @@ var canvas = document.getElementById("renderCanvas") as HTMLCanvasElement; // Ge
 var engine = new Engine(canvas, true); // Generate the BABYLON 3D engine
 
 class RubberbandWorld {
-  static GRAVITY: Vector3 = new Vector3(0, -10, 0);
+  static GRAVITY: Vector3 = new Vector3(0, -9.81, 0);
 
   public static async CreateScene(engine: Engine, canvas: HTMLCanvasElement) {
     // Create the scene space
     let scene = new Scene(engine);
     scene.createDefaultCameraOrLight(true, true, true);
+    scene.collisionsEnabled = true;
 
-    const skybox = MeshBuilder.CreateBox("skyBox", { size: 4000.0 }, scene);
+    const skybox = MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
     const skyboxMaterial = new StandardMaterial("skyBox", scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.reflectionTexture = new CubeTexture(
@@ -59,12 +60,30 @@ class RubberbandWorld {
     ground.material = groundMaterial;
     ground.position = new Vector3(0, -0.5, 0);
 
+    const target = MeshBuilder.CreateBox(
+      "target",
+      { height: 10, width: 10, depth: 10 },
+      scene
+    );
+    target.position = new Vector3(0, 4.5, 30);
+
     scene.enablePhysics(
       RubberbandWorld.GRAVITY,
       new CannonJSPlugin(undefined, undefined, Cannon)
     );
     ground.physicsImpostor = new PhysicsImpostor(
       ground,
+      PhysicsImpostor.BoxImpostor,
+      {
+        mass: 0,
+        restitution: 0.1,
+        friction: 1,
+      },
+      scene
+    );
+
+    target.physicsImpostor = new PhysicsImpostor(
+      target,
       PhysicsImpostor.BoxImpostor,
       {
         mass: 0,

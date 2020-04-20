@@ -1,4 +1,3 @@
-import { WebXRState } from "@babylonjs/core/XR/webXRTypes";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Scene } from "@babylonjs/core/scene";
 import { Texture, Mesh } from "@babylonjs/core";
@@ -67,7 +66,6 @@ export class RubberbandControls {
       { height: 0.6, width: 0.03, depth: 0.01 },
       scene
     );
-    // sword.position = new Vector3(0, 0, 0);
 
     this.leftHand = MeshBuilder.CreateSphere("left", { diameter: 0.12 }, scene);
     const leftThumb = MeshBuilder.CreateSphere(
@@ -126,21 +124,18 @@ export class RubberbandControls {
               .getComponentOfType("trigger")!
               .onButtonStateChangedObservable.add(() => {
                 if (
-                  this.rightController === null ||
-                  this.rightController?.rootMesh === null
-                )
-                  return;
-
-                if (
                   this.rightController &&
                   this.rightController.getComponentOfType("trigger")?.pressed
                 ) {
-                  sword.position = this.rightController.rootMesh.position;
-                  this.rightHand.addChild(sword);
                   this.equipped = true;
+                  this.rightHand.addChild(sword);
+
+                  if (this.rightController && this.rightController.rootMesh) {
+                    sword.rotationQuaternion = this.rightController.rootMesh?.absoluteRotationQuaternion;
+                  }
                 } else {
                   this.equipped = false;
-                  this.rightController?.rootMesh?.removeChild(sword);
+                  this.rightHand.removeChild(sword);
                 }
               });
           });
@@ -182,6 +177,9 @@ export class RubberbandControls {
         sword.position = this.xr.baseExperience.camera.globalPosition.subtract(
           new Vector3(0.25, 0.75, 0)
         );
+        sword.rotation = new Vector3(0, 0, 0);
+      } else {
+        sword.position = new Vector3(0, 0.3, 0);
       }
     });
   }
